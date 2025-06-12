@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="12dp"
+    android:gravity="center_vertical">
+
+    <TextView
+        android:id="@+id/txtName"
+        android:layout_width="205dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="2"
+        android:text="Nome"
+        android:textSize="16sp" />
+
+    <Button
+        android:id="@+id/btnDecrement"
+        android:layout_width="60dp"
+        android:layout_height="40dp"
+        android:text="−" />
+
+    <TextView
+        android:id="@+id/txtQuantity"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:text="0"
+        android:textSize="16sp"
+        android:gravity="center"
+        android:layout_marginHorizontal="8dp" />
+
+    <Button
+        android:id="@+id/btnIncrement"
+        android:layout_width="60dp"
+        android:layout_height="40dp"
+        android:text="+" />
+</LinearLayout>

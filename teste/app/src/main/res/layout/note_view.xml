@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- TÍTULO -->
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:fontFamily="sans-serif"
+            android:text="Notinha do pedido de Resina"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textSize="26sp"
+            android:textStyle="bold|italic" />
+
+        <!-- DIVISÓRIA -->
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="16dp"
+            android:background="?android:attr/listDivider" />
+
+        <!-- TEXTO DA NOTA -->
+        <TextView
+            android:id="@+id/textNota"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp" />
+
+        <!-- BOTÕES LADO A LADO -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:weightSum="3">
+
+            <Button
+                android:id="@+id/CopyList"
+                android:layout_width="16dp"
+                android:layout_height="46dp"
+                android:layout_marginEnd="4dp"
+                android:layout_weight="1"
+                android:text="Copiar nota"
+                android:textSize="12sp"
+                android:typeface="sans" />
+
+            <Button
+                android:id="@+id/ShareList"
+                android:layout_width="31dp"
+                android:layout_height="46dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
+                android:layout_weight="1"
+                android:text="Compartilhar"
+                android:textSize="12sp"
+                android:typeface="sans" />
+
+            <Button
+                android:id="@+id/ReturnButton"
+                android:layout_width="0dp"
+                android:layout_height="46dp"
+                android:layout_marginStart="4dp"
+                android:layout_weight="1"
+                android:text="Retornar"
+                android:textSize="12sp"
+                android:typeface="sans"
+                tools:ignore="ButtonStyle" />
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>
