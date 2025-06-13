@@ -83,7 +83,6 @@ public class MainActivity extends AppCompatActivity {
         // Funcionamento dos botões
         saveButton.setOnClickListener(v -> {
             List<Product> itemsToSave = new ArrayList<>();
-            this.confirmation = !confirmation;
 
             for (Product p : filteredProducts) {
                 if (p.getQuantity() > 0) {
@@ -95,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
 
             if (!itemsToSave.isEmpty()) {
                 LSManager.addItems(itemsToSave);
+                confirmation = true;
                 Toast.makeText(this, "Itens salvos com sucesso!", Toast.LENGTH_SHORT).show();
 
             } else {
@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         finishButton.setOnClickListener(v -> {
-            if(this.confirmation != false) {
+            if (!LSManager.getSavedItems().isEmpty()) {
                 Intent intent = new Intent(MainActivity.this, NoteScreen.class);
                 startActivity(intent);
 

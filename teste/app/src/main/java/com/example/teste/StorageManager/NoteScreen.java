@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.teste.ProductList.Product;
 import com.example.teste.R;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -21,13 +22,17 @@ public class NoteScreen extends AppCompatActivity {
 
         noteTextView = findViewById(R.id.textNota);
 
-        Map<String, List<Product>> grouped = new TreeMap<>();
+        List<String> orderedSizes = List.of("7cm", "12cm", "15cm", "20cm", "30cm");
+        Map<String, List<Product>> grouped = new LinkedHashMap<>();
+
+        for (String size : orderedSizes) {
+            grouped.put(size, new ArrayList<>());
+        }
 
         for (Product p : LSManager.getSavedItems()) {
-            if (!grouped.containsKey(p.getSize())) {
-                grouped.put(p.getSize(), new ArrayList<>());
+            if (grouped.containsKey(p.getSize())) {
+                grouped.get(p.getSize()).add(p);
             }
-            grouped.get(p.getSize()).add(p);
         }
 
         StringBuilder note = new StringBuilder();

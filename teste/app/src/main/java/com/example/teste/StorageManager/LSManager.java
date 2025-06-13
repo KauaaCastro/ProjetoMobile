@@ -9,7 +9,9 @@ public class LSManager {
     private static List<Product> savedItems = new ArrayList<>();
 
     public static void addItems(List<Product> items) {
+        LSManager.clear();
         savedItems.addAll(items);
+
     }
 
     public static List<Product> getSavedItems() {
