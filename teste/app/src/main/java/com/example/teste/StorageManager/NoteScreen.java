@@ -22,6 +22,7 @@ public class NoteScreen extends AppCompatActivity {
 
         noteTextView = findViewById(R.id.textNota);
 
+        // Organiza as categorias
         List<String> orderedSizes = List.of("7cm", "12cm", "15cm", "20cm", "30cm");
         Map<String, List<Product>> grouped = new LinkedHashMap<>();
 

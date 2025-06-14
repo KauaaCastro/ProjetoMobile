@@ -1,5 +1,6 @@
 package com.example.teste;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -84,13 +85,14 @@ public class MainActivity extends AppCompatActivity {
         saveButton.setOnClickListener(v -> {
             List<Product> itemsToSave = new ArrayList<>();
 
-            for (Product p : filteredProducts) {
+            for (Product p : allProducts) {
                 if (p.getQuantity() > 0) {
                     itemsToSave.add(new Product(p.getName(), p.getSize(), p.getQuantity()));
-
                 }
-
             }
+
+            LSManager.addItems(itemsToSave);
+            confirmation = true;
 
             if (!itemsToSave.isEmpty()) {
                 LSManager.addItems(itemsToSave);
@@ -98,7 +100,8 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, "Itens salvos com sucesso!", Toast.LENGTH_SHORT).show();
 
             } else {
-                Toast.makeText(this, "Nenhum item com quantidade selecionada.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Nenhum item com quantidade selecionada.", Toast.LENGTH_SHORT).show();
+                    confirmation = true;
 
             }
         });
@@ -110,6 +113,7 @@ public class MainActivity extends AppCompatActivity {
 
             } else {
                 Toast.makeText(this, "Salve a lista antes de exibir a nota!", Toast.LENGTH_SHORT).show();
+                confirmation = false;
 
             }
         });
