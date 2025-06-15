@@ -29,7 +29,8 @@ public class MainActivity extends AppCompatActivity {
     private Spinner spinner;
     private boolean confirmation = false;
 
-    // Carrega a tela
+    private int count = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
         Button saveButton = findViewById(R.id.SaveList);
         Button finishButton = findViewById(R.id.FinallyList);
 
-        // Criar uma lista inicial de produtos
+        // Criar lista inicial de produtos
         allProducts = new ArrayList<>();
         allProducts.add(new Product("Nossa Senhora Aparecida", "7cm", 0));
         allProducts.add(new Product("São Jorge", "7cm", 0));
@@ -51,20 +52,14 @@ public class MainActivity extends AppCompatActivity {
         allProducts.add(new Product("Nossa Senhora Aparecida", "20cm", 0));
         allProducts.add(new Product("Santa Rita", "30cm", 0));
 
-        // Cria a lista filtrada
         filteredProducts = new ArrayList<>();
-
-        // Abrindo a aplicação com a lista já filtrada
         adapter = new ProductAdapter(filteredProducts);
         recyclerView.setAdapter(adapter);
 
-        // Colocando os tamanhos dentro da box
+        // Spinner de tamanhos
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(
                 this, android.R.layout.simple_spinner_item,
-                new String[]{
-                        "7cm", "12cm", "15cm", "20cm", "30cm"
-                }
-        );
+                new String[]{"7cm", "12cm", "15cm", "20cm", "30cm"});
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(spinnerAdapter);
 
@@ -76,58 +71,95 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
+            public void onNothingSelected(AdapterView<?> parent) {}
         });
 
-        // Funcionamento dos botões
+        // Botão salvar lista — salva no LSManager
         saveButton.setOnClickListener(v -> {
-            List<Product> itemsToSave = new ArrayList<>();
+            this.count++;
 
+            List<Product> itemsToSave = new ArrayList<>();
             for (Product p : allProducts) {
                 if (p.getQuantity() > 0) {
                     itemsToSave.add(new Product(p.getName(), p.getSize(), p.getQuantity()));
                 }
             }
 
+            // Atualiza a lista salva no LSManager
             LSManager.addItems(itemsToSave);
+
             confirmation = true;
 
-            if (!itemsToSave.isEmpty()) {
-                LSManager.addItems(itemsToSave);
-                confirmation = true;
-                Toast.makeText(this, "Itens salvos com sucesso!", Toast.LENGTH_SHORT).show();
-
-            } else {
-                    Toast.makeText(this, "Nenhum item com quantidade selecionada.", Toast.LENGTH_SHORT).show();
-                    confirmation = true;
-
-            }
+            ShowUpdate(itemsToSave);
         });
 
+        // Botão finalizar — atualiza LSManager e abre NoteScreen se houver itens
         finishButton.setOnClickListener(v -> {
+            // Atualiza os itens salvos antes de verificar
+            List<Product> itemsToSave = new ArrayList<>();
+            for (Product p : allProducts) {
+                if (p.getQuantity() > 0) {
+                    itemsToSave.add(new Product(p.getName(), p.getSize(), p.getQuantity()));
+                }
+            }
+            LSManager.addItems(itemsToSave);
+
             if (!LSManager.getSavedItems().isEmpty()) {
                 Intent intent = new Intent(MainActivity.this, NoteScreen.class);
                 startActivity(intent);
 
             } else {
-                Toast.makeText(this, "Salve a lista antes de exibir a nota!", Toast.LENGTH_SHORT).show();
                 confirmation = false;
-
+                new AlertDialog.Builder(MainActivity.this)
+                        .setTitle("Atenção!")
+                        .setMessage("Não há nenhum item na lista de resina ainda, insira-os e finalize o pedido")
+                        .setPositiveButton("Ok", null)
+                        .show();
             }
         });
     }
 
     private void FilteredListBySize(String size) {
         filteredProducts.clear();
-
         for (Product p : allProducts) {
             if (p.getSize().equals(size)) {
                 filteredProducts.add(p);
             }
         }
         adapter.notifyDataSetChanged();
+    }
+
+    private void ShowUpdate(List<Product> itemsToSave) {
+        if (!itemsToSave.isEmpty()) {
+            if(count == 0) {
+                Toast.makeText(this, "Lista atualizada com sucesso!", Toast.LENGTH_SHORT).show();
+                this.count = -1;
+            } else {
+                this.count = -1;
+                new AlertDialog.Builder(MainActivity.this)
+                        .setTitle("Lista atualizada!")
+                        .setMessage("A lista foi atualizada com sucesso!")
+                        .setPositiveButton("Continuar", (dialog, which) -> {
+                            Toast.makeText(this, "A próxima confirmação aparecerá aqui", Toast.LENGTH_SHORT).show();
+                        }).show();
+            }
+
+        } else {
+            if (count >= 5) {
+                new AlertDialog.Builder(MainActivity.this)
+                        .setTitle("OOOOO MUMU")
+                        .setMessage("Mumu tem que adicionar produtos a lista, para ela abrir, né Mumu")
+                        .setPositiveButton("KKKK Mumu é complicado", null)
+                        .show();
+
+            } else {
+                new AlertDialog.Builder(MainActivity.this)
+                        .setTitle("Lista não atualizada!")
+                        .setMessage("Não possui itens a serem atualizados, adicione-os e salve novamente")
+                        .setPositiveButton("Ok", null)
+                        .show();
+            }
+        }
     }
 }
 
