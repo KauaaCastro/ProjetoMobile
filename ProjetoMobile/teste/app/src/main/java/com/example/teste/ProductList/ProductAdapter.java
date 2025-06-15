@@ -1,21 +1,29 @@
 package com.example.teste.ProductList;
 
+import android.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.teste.R;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import java.util.List;
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductViewHolder>{
 
     private List<Product> productList;
+    private FirebaseFirestore db;
+
 
     public ProductAdapter(List<Product> productList) {
         this.productList = productList;
+        this.db = FirebaseFirestore.getInstance();
     }
 
     // Cria um item da lista com base na tela de layout dos produtos
@@ -32,16 +40,17 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         holder.txName.setText(product.getName());
         holder.txtQuantity.setText(String.valueOf(product.getQuantity()));
 
-        //Botão de mais
         holder.btIncrement.setOnClickListener(v -> {
             product.increment();
             holder.txtQuantity.setText(String.valueOf(product.getQuantity()));
+            updateQuantityInFirestore(product);
         });
 
-        //Botão de menos
+        // Botão decrementar
         holder.btDecrement.setOnClickListener(v -> {
             product.decrement();
             holder.txtQuantity.setText(String.valueOf(product.getQuantity()));
+            updateQuantityInFirestore(product);
         });
     }
 
@@ -61,5 +70,12 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
             btIncrement = itemView.findViewById(R.id.btnIncrement);
             btDecrement = itemView.findViewById(R.id.btnDecrement);
         }
+    }
+
+    private void updateQuantityInFirestore(Product product) {
+        db.collection("products")
+                .document(product.getId())
+                .update("quantity", product.getQuantity());
+
     }
 }

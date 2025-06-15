@@ -1,6 +1,7 @@
 package com.example.teste.ProductList;
 
 public class Product {
+    private String id;
     private String name;
     private String size;
     private int quantity;
@@ -8,10 +9,19 @@ public class Product {
     public Product() {
     }
 
-    public Product(String name, String size, int quantity) {
+    public Product(String name, String size, int quantity, String id) {
+        this.id = id;
         this.name = name;
         this.size = size;
         this.quantity = quantity;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId() {
+        this.id = id;
     }
 
     public String getName() {
