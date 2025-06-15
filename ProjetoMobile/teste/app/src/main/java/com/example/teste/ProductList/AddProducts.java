@@ -10,6 +10,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.example.teste.R;
 import com.example.teste.StorageManager.LSManager;
 
+import java.util.UUID;
+
 public class AddProducts extends AppCompatActivity {
 
     private EditText inputName, inputSize;
@@ -28,9 +30,10 @@ public class AddProducts extends AppCompatActivity {
         addButton.setOnClickListener(v -> {
             String name = inputName.getText().toString().trim();
             String size = inputSize.getText().toString().trim();
+            String id = UUID.randomUUID().toString();
 
             if (!name.isEmpty() && !size.isEmpty()) {
-                Product newProduct = new Product(name, size, 0);
+                Product newProduct = new Product(name, size, 0, id);
 
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
                 String docId = name + "_" + size;

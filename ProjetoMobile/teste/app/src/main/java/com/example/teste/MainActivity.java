@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
             List<Product> itemsToSave = new ArrayList<>();
             for (Product p : allProducts) {
                 if (p.getQuantity() > 0) {
-                    itemsToSave.add(new Product(p.getName(), p.getSize(), p.getQuantity()));
+                    itemsToSave.add(new Product(p.getName(), p.getSize(), p.getQuantity(), p.getId()));
                 }
             }
 
@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
             List<Product> itemsToSave = new ArrayList<>();
             for (Product p : allProducts) {
                 if (p.getQuantity() > 0) {
-                    itemsToSave.add(new Product(p.getName(), p.getSize(), p.getQuantity()));
+                    itemsToSave.add(new Product(p.getName(), p.getSize(), p.getQuantity(), p.getId()));
                 }
             }
             LSManager.addItems(itemsToSave);
@@ -193,16 +193,17 @@ public class MainActivity extends AppCompatActivity {
                     if (querySnapshot != null) {
                         allProducts.clear();
                         for (DocumentSnapshot doc : querySnapshot.getDocuments()) {
+                            String id = doc.getId(); // <-- ID do documento
                             String name = doc.getString("name");
                             String size = doc.getString("size");
                             Long quantityLong = doc.getLong("quantity");
                             int quantity = quantityLong != null ? quantityLong.intValue() : 0;
 
-                            allProducts.add(new Product(name, size, quantity));
+                            allProducts.add(new Product(name, size, quantity, id));
                         }
 
                         String selectedSize = spinner.getSelectedItem().toString();
-                        FilteredListBySize(selectedSize); // Atualiza dinamicamente
+                        FilteredListBySize(selectedSize);
                     }
                 });
     }
@@ -232,7 +233,7 @@ public class MainActivity extends AppCompatActivity {
 
             } else {
                 new AlertDialog.Builder(MainActivity.this)
-                        .setTitle("Lista não atualizada!")
+                        .setTitle("Lista nula!")
                         .setMessage("Não possui itens a serem atualizados, adicione-os e salve novamente")
                         .setPositiveButton("Ok", null)
                         .show();
