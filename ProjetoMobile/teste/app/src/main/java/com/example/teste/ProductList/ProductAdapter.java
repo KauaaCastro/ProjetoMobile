@@ -34,13 +34,13 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 
         //Botão de mais
         holder.btIncrement.setOnClickListener(v -> {
-            product.Increment();
+            product.increment();
             holder.txtQuantity.setText(String.valueOf(product.getQuantity()));
         });
 
         //Botão de menos
         holder.btDecrement.setOnClickListener(v -> {
-            product.Decrement();
+            product.decrement();
             holder.txtQuantity.setText(String.valueOf(product.getQuantity()));
         });
     }

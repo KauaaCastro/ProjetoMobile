@@ -22,6 +22,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".StorageManager.NoteScreen"/>
+        <activity android:name=".ProductList.AddProducts" />
     </application>
 
 </manifest>

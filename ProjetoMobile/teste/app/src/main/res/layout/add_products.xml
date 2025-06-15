@@ -1,0 +1,33 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="24dp">
+
+    <EditText
+        android:id="@+id/inputName"
+        android:layout_width="match_parent"
+        android:layout_height="58dp"
+        android:hint="Nome do Produto" />
+
+    <EditText
+        android:id="@+id/inputSize"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:hint="Tamanho (ex: 7cm)"
+        android:inputType="text" />
+
+    <Button
+        android:id="@+id/btnAddProduct"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Adicionar Produto" />
+
+    <Button
+        android:id="@+id/btnRemoveButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Remover Produto" />
+</LinearLayout>

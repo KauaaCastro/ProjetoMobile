@@ -5,6 +5,9 @@ public class Product {
     private String size;
     private int quantity;
 
+    public Product() {
+    }
+
     public Product(String name, String size, int quantity) {
         this.name = name;
         this.size = size;
@@ -15,8 +18,16 @@ public class Product {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getSize() {
         return size;
+    }
+
+    public void setSize(String size) {
+        this.size = size;
     }
 
     public int getQuantity() {
@@ -27,11 +38,11 @@ public class Product {
         this.quantity = quantity;
     }
 
-    public void Increment() {
+    public void increment() {
         this.quantity++;
     }
 
-    public void Decrement() {
+    public void decrement() {
         if(this.quantity > 0) {
             this.quantity--;
         }

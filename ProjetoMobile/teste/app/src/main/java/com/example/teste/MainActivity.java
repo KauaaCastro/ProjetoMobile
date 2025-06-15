@@ -3,19 +3,27 @@ package com.example.teste;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.teste.ProductList.AddProducts;
 import com.example.teste.ProductList.Product;
 import com.example.teste.ProductList.ProductAdapter;
 import com.example.teste.StorageManager.LSManager;
 import com.example.teste.StorageManager.NoteScreen;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,16 +49,13 @@ public class MainActivity extends AppCompatActivity {
         spinner = findViewById(R.id.SelectSize);
         Button saveButton = findViewById(R.id.SaveList);
         Button finishButton = findViewById(R.id.FinallyList);
+        TextView titleButton = findViewById(R.id.titleView);
+
+
 
         // Criar lista inicial de produtos
         allProducts = new ArrayList<>();
-        allProducts.add(new Product("Nossa Senhora Aparecida", "7cm", 0));
-        allProducts.add(new Product("São Jorge", "7cm", 0));
-        allProducts.add(new Product("São José", "12cm", 0));
-        allProducts.add(new Product("Santa Rita", "12cm", 0));
-        allProducts.add(new Product("Santo Antônio", "15cm", 0));
-        allProducts.add(new Product("Nossa Senhora Aparecida", "20cm", 0));
-        allProducts.add(new Product("Santa Rita", "30cm", 0));
+
 
         filteredProducts = new ArrayList<>();
         adapter = new ProductAdapter(filteredProducts);
@@ -93,9 +98,7 @@ public class MainActivity extends AppCompatActivity {
             ShowUpdate(itemsToSave);
         });
 
-        // Botão finalizar — atualiza LSManager e abre NoteScreen se houver itens
         finishButton.setOnClickListener(v -> {
-            // Atualiza os itens salvos antes de verificar
             List<Product> itemsToSave = new ArrayList<>();
             for (Product p : allProducts) {
                 if (p.getQuantity() > 0) {
@@ -117,16 +120,91 @@ public class MainActivity extends AppCompatActivity {
                         .show();
             }
         });
+
+        titleButton.setOnClickListener(new View.OnClickListener() {
+            int newCount = 0;
+            long lastClickTime = 0;
+
+            @Override
+            public void onClick(View v) {
+                long now = System.currentTimeMillis();
+                if (now - lastClickTime > 1000) {
+                    newCount = 0;
+                }
+                lastClickTime = now;
+                count++;
+                if (count == 5) {
+                    count = 0;
+                    PasswordScreen();
+                }
+            }
+        });
+
+        fetchProductsFromFirestore();
+    }
+
+    private void PasswordScreen() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Gerenciamento de produtos");
+
+        final EditText input = new EditText(this);
+        input.setHint("Digite a senha:");
+        input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        builder.setView(input);
+
+        builder.setPositiveButton("Confirmar", (dialog, which) -> {
+            String password = input.getText().toString().trim();
+            if (password.equals("teste")) {
+                Intent intent = new Intent(MainActivity.this, AddProducts.class);
+                startActivity(intent);
+
+            } else {
+                Toast.makeText(this, "Senha incorreta!", Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+        builder.setNegativeButton("Cancelar", (dialog, which) -> dialog.cancel());
+        builder.show();
     }
 
     private void FilteredListBySize(String size) {
         filteredProducts.clear();
+
         for (Product p : allProducts) {
-            if (p.getSize().equals(size)) {
+            if (p.getSize() != null && p.getSize().trim().equalsIgnoreCase(size.trim())) {
                 filteredProducts.add(p);
             }
         }
+
         adapter.notifyDataSetChanged();
+    }
+
+    private void fetchProductsFromFirestore() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("products")
+                .addSnapshotListener((querySnapshot, e) -> {
+                    if (e != null) {
+                        Toast.makeText(this, "Erro ao escutar dados: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                        return;
+                    }
+
+                    if (querySnapshot != null) {
+                        allProducts.clear();
+                        for (DocumentSnapshot doc : querySnapshot.getDocuments()) {
+                            String name = doc.getString("name");
+                            String size = doc.getString("size");
+                            Long quantityLong = doc.getLong("quantity");
+                            int quantity = quantityLong != null ? quantityLong.intValue() : 0;
+
+                            allProducts.add(new Product(name, size, quantity));
+                        }
+
+                        String selectedSize = spinner.getSelectedItem().toString();
+                        FilteredListBySize(selectedSize); // Atualiza dinamicamente
+                    }
+                });
     }
 
     private void ShowUpdate(List<Product> itemsToSave) {
